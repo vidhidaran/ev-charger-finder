@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 import StationMap from "../components/StationMap";
 
 function Home() {
-  const [stations, setStations] = useState([]);
+  const [stations, setStations] = useState([]); // Initialize as empty array
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [view, setView] = useState('list'); 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("All");
@@ -14,11 +16,24 @@ function Home() {
   useEffect(() => {
     const fetchStations = async () => {
         try {
-          // FIX 1: Use the full VITE_API_URL from your .env file
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/stations`);
-          setStations(response.data);
+          const apiUrl = import.meta.env.VITE_API_URL;
+          console.log("Fetching from:", apiUrl); // DEBUG LOG
+
+          const response = await axios.get(`${apiUrl}/api/stations`);
+          console.log("Data received:", response.data); // DEBUG LOG
+
+          // SAFETY CHECK: Is it actually an array?
+          if (Array.isArray(response.data)) {
+            setStations(response.data);
+          } else {
+            console.error("Data is not an array:", response.data);
+            setError("Received invalid data from server (Check Console)");
+          }
         } catch (error) {
           console.error("Error fetching stations:", error);
+          setError("Failed to connect to backend");
+        } finally {
+          setLoading(false);
         }
       };
       fetchStations();
@@ -27,7 +42,6 @@ function Home() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this station?")) {
       try {
-        // FIX 2: Use the full URL here too
         await axios.delete(`${import.meta.env.VITE_API_URL}/api/stations/${id}`);
         setStations(stations.filter((station) => station._id !== id));
       } catch (error) {
@@ -36,13 +50,17 @@ function Home() {
     }
   };
 
-  const filteredStations = stations.filter((station) => {
+  // SAFETY FILTER: Only filter if we have stations
+  const filteredStations = Array.isArray(stations) ? stations.filter((station) => {
     const matchesSearch = station.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           station.address.toLowerCase().includes(searchTerm.toLowerCase());
     const typeToCheck = station.connectorTypes ? station.connectorTypes[0] : "";
     const matchesType = filterType === "All" || typeToCheck === filterType;
     return matchesSearch && matchesType;
-  });
+  }) : [];
+
+  if (loading) return <div style={{textAlign: 'center', marginTop: '50px'}}>Loading stations...</div>;
+  if (error) return <div style={{textAlign: 'center', color: 'red', marginTop: '50px'}}>Error: {error}</div>;
 
   return (
     <div>
