@@ -51,7 +51,7 @@ nav a:hover {
 }
 
 /* =========================================
-   3. HERO SECTION (New!)
+   3. HERO SECTION
    ========================================= */
 .hero-banner {
   text-align: center;
@@ -217,4 +217,64 @@ nav a:hover {
   nav { flex-direction: column; text-align: center; gap: 10px; }
   .search-bar-container { margin: 10px; flex-direction: column; }
   .station-card { width: 100%; }
+}
+
+/* =========================================
+   7. FORM STYLES (NEW - Fixes Add/Edit Page)
+   ========================================= */
+.form-container {
+  max-width: 500px;
+  margin: 30px auto; /* Centers the form */
+  padding: 25px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Nice shadow */
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between inputs */
+}
+
+.form-input, .form-select {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box; /* Prevents spilling over */
+  transition: border-color 0.3s;
+}
+
+.form-input:focus, .form-select:focus {
+  border-color: #38ef7d;
+  outline: none;
+}
+
+.form-input-group {
+  display: flex;
+  gap: 15px; /* Space between Lat/Lng */
+}
+
+.form-button {
+  background-color: #38ef7d; /* Matches your Green Theme */
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+  box-shadow: 0 4px 10px rgba(56, 239, 125, 0.3);
+}
+
+.form-button:hover {
+  background-color: #2ecc71; /* Darker Green on hover */
+  transform: translateY(-2px);
+}
+
+h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-weight: 700;
 }
