@@ -64,7 +64,7 @@ function Home() {
   return (
     <div>
       <div className="hero-banner">
-        <h1 className="hero-title">⚡ Find Your Charge</h1>
+      <h1 className="hero-title">⚡ Find Your Charge V2</h1>
         <p className="hero-subtitle">Locate the best EV charging stations instantly.</p>
       </div>
       
