@@ -3,8 +3,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom"; 
 import StationMap from "../components/StationMap";
 
+// ✅ FIX: Hardcoded Backend URL (Guaranteed to work)
+const API_URL = "https://ev-charger-finder.onrender.com";
+
 function Home() {
-  const [stations, setStations] = useState([]); // Initialize as empty array
+  const [stations, setStations] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [view, setView] = useState('list'); 
@@ -16,22 +19,18 @@ function Home() {
   useEffect(() => {
     const fetchStations = async () => {
         try {
-          const apiUrl = "https://ev-charger-finder.onrender.com";
-          console.log("Fetching from:", apiUrl); // DEBUG LOG
-
-          const response = await axios.get(`${apiUrl}/api/stations`);
-          console.log("Data received:", response.data); // DEBUG LOG
-
-          // SAFETY CHECK: Is it actually an array?
+          // ✅ FIX: Using the hardcoded URL
+          console.log("Fetching from:", API_URL); 
+          const response = await axios.get(`${API_URL}/api/stations`);
+          
           if (Array.isArray(response.data)) {
             setStations(response.data);
           } else {
-            console.error("Data is not an array:", response.data);
-            setError("Received invalid data from server (Check Console)");
+            setError("Received invalid data from server.");
           }
         } catch (error) {
           console.error("Error fetching stations:", error);
-          setError("Failed to connect to backend");
+          setError("Failed to connect to backend. (Is it waking up?)");
         } finally {
           setLoading(false);
         }
@@ -42,7 +41,7 @@ function Home() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this station?")) {
       try {
-        await axios.delete(`${import.meta.env.VITE_API_URL}/api/stations/${id}`);
+        await axios.delete(`${API_URL}/api/stations/${id}`);
         setStations(stations.filter((station) => station._id !== id));
       } catch (error) {
         console.error("Error deleting station:", error);
@@ -50,7 +49,6 @@ function Home() {
     }
   };
 
-  // SAFETY FILTER: Only filter if we have stations
   const filteredStations = Array.isArray(stations) ? stations.filter((station) => {
     const matchesSearch = station.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           station.address.toLowerCase().includes(searchTerm.toLowerCase());
@@ -59,7 +57,8 @@ function Home() {
     return matchesSearch && matchesType;
   }) : [];
 
-  if (loading) return <div style={{textAlign: 'center', marginTop: '50px'}}>Loading stations...</div>;
+  // ✅ LOADING & ERROR STATES (Prevents White Screen)
+  if (loading) return <div style={{textAlign: 'center', marginTop: '50px'}}>Loading stations... (Waking up server)</div>;
   if (error) return <div style={{textAlign: 'center', color: 'red', marginTop: '50px'}}>Error: {error}</div>;
 
   return (
@@ -109,7 +108,6 @@ function Home() {
                             <div className="card-header-bg">
                                 <h3>{station.name}</h3>
                             </div>
-                            
                             <div className="card-body">
                                 <div className="info-row">
                                     <span className="icon">📍</span> 
@@ -127,7 +125,6 @@ function Home() {
                                     <span className="icon">💰</span> 
                                     Price: <span className="badge badge-price">₹{station.pricePerKWh}/kWh</span>
                                 </div>
-
                                 <div className="btn-group">
                                     <button className="btn btn-delete" onClick={() => handleDelete(station._id)}>Delete</button>
                                     <button className="btn btn-edit" onClick={() => navigate(`/edit/${station._id}`)}>Edit</button>
