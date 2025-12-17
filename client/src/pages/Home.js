@@ -14,7 +14,8 @@ function Home() {
   useEffect(() => {
     const fetchStations = async () => {
         try {
-          const response = await axios.get("/api/stations");
+          // FIX 1: Use the full VITE_API_URL from your .env file
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/stations`);
           setStations(response.data);
         } catch (error) {
           console.error("Error fetching stations:", error);
@@ -26,7 +27,8 @@ function Home() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this station?")) {
       try {
-        await axios.delete(`/api/stations/${id}`);
+        // FIX 2: Use the full URL here too
+        await axios.delete(`${import.meta.env.VITE_API_URL}/api/stations/${id}`);
         setStations(stations.filter((station) => station._id !== id));
       } catch (error) {
         console.error("Error deleting station:", error);
@@ -44,13 +46,11 @@ function Home() {
 
   return (
     <div>
-      {/* 1. HERO BANNER */}
       <div className="hero-banner">
-        <h1 className="hero-title"> Find Your Charge</h1>
-        <p className="hero-subtitle">Locate the best EV charging stations  instantly.</p>
+        <h1 className="hero-title">⚡ Find Your Charge</h1>
+        <p className="hero-subtitle">Locate the best EV charging stations instantly.</p>
       </div>
       
-      {/* 2. SEARCH & FILTER BAR (Floating) */}
       <div className="search-bar-container">
           <input 
             className="search-input"
@@ -78,7 +78,6 @@ function Home() {
           </div>
       </div>
 
-      {/* 3. RESULTS AREA */}
       {filteredStations.length === 0 ? (
         <p style={{ textAlign: 'center', color: '#666', marginTop: '50px' }}>No stations found matching your search.</p>
       ) : (
@@ -89,18 +88,15 @@ function Home() {
                 <div className="stations-container">
                     {filteredStations.map((station) => (
                         <div key={station._id} className="station-card">
-                            {/* Card Header Gradient */}
                             <div className="card-header-bg">
                                 <h3>{station.name}</h3>
                             </div>
                             
-                            {/* Card Body */}
                             <div className="card-body">
                                 <div className="info-row">
                                     <span className="icon">📍</span> 
                                     {station.address}
                                 </div>
-                                
                                 <div className="info-row">
                                     <span className="icon">⚡</span> 
                                     Type: <span className="badge badge-type">{station.connectorTypes ? station.connectorTypes.join(', ') : 'N/A'}</span>
