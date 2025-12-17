@@ -2,18 +2,20 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+// ✅ FIX: Hardcode the Backend URL directly
+const API_URL = "https://ev-charger-finder.onrender.com";
+
 function AddStation() {
   const navigate = useNavigate();
 
-  // FIX 3: Update State names to match Schema
   const [formData, setFormData] = useState({
     name: "",
     address: "",
     latitude: "",
     longitude: "",
-    connectorTypeInput: "CCS2", // Temporary holder for dropdown
-    powerKW: "",       // Was 'power'
-    pricePerKWh: "",   // Was 'price'
+    connectorTypeInput: "CCS2",
+    powerKW: "",
+    pricePerKWh: "",
   });
 
   const handleChange = (e) => {
@@ -23,20 +25,19 @@ function AddStation() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // FIX 4: Prepare data for backend
-    // Convert the single dropdown value into an Array for connectorTypes
     const dataToSend = {
         name: formData.name,
         address: formData.address,
         latitude: formData.latitude,
         longitude: formData.longitude,
-        connectorTypes: [formData.connectorTypeInput], // Send as Array!
+        connectorTypes: [formData.connectorTypeInput],
         powerKW: formData.powerKW,
         pricePerKWh: formData.pricePerKWh
     };
 
     try {
-      await axios.post("/api/stations/add", dataToSend);
+      // ✅ FIX: Use API_URL here
+      await axios.post(`${API_URL}/api/stations/add`, dataToSend);
       alert("Station Added Successfully! ✅");
       navigate("/"); 
     } catch (error) {
@@ -57,7 +58,6 @@ function AddStation() {
           <input type="number" name="longitude" placeholder="Longitude" value={formData.longitude} onChange={handleChange} required className="form-input" />
         </div>
 
-        {/* FIX 5: Update Name attribute */}
         <select name="connectorTypeInput" value={formData.connectorTypeInput} onChange={handleChange} className="form-select">
           <option value="CCS2">CCS2</option>
           <option value="CHAdeMO">CHAdeMO</option>
@@ -65,10 +65,7 @@ function AddStation() {
           <option value="DC Fast">DC Fast</option>
         </select>
 
-        {/* FIX 6: Update Name attribute */}
         <input type="number" name="powerKW" placeholder="Power (kW)" value={formData.powerKW} onChange={handleChange} required className="form-input" />
-        
-        {/* FIX 7: Update Name attribute */}
         <input type="number" name="pricePerKWh" placeholder="Price per kWh (₹)" value={formData.pricePerKWh} onChange={handleChange} required className="form-input" />
         
         <button type="submit" className="form-button">Submit Station</button>

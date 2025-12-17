@@ -16,7 +16,7 @@ function Home() {
   useEffect(() => {
     const fetchStations = async () => {
         try {
-          const apiUrl = import.meta.env.VITE_API_URL;
+          const apiUrl = "https://ev-charger-finder.onrender.com";
           console.log("Fetching from:", apiUrl); // DEBUG LOG
 
           const response = await axios.get(`${apiUrl}/api/stations`);
