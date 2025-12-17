@@ -1,0 +1,220 @@
+/* =========================================
+   1. GLOBAL THEME & FONTS
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+@import url('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'); 
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif; /* Modern Font */
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); /* Subtle gradient bg */
+  min-height: 100vh;
+  color: #333;
+}
+
+/* =========================================
+   2. NAVBAR (Gradient & Glassmorphism)
+   ========================================= */
+nav {
+  background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%); /* Electric Green Gradient */
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(56, 239, 125, 0.4); /* Glowing shadow */
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+nav h1 {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-weight: 600;
+  transition: all 0.3s;
+  padding: 8px 15px;
+  border-radius: 20px;
+}
+
+nav a:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   3. HERO SECTION (New!)
+   ========================================= */
+.hero-banner {
+  text-align: center;
+  padding: 50px 20px;
+  background: white;
+  margin-bottom: 30px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.hero-subtitle {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+/* =========================================
+   4. SEARCH & FILTER BAR
+   ========================================= */
+.search-bar-container {
+  max-width: 900px;
+  margin: -60px auto 30px auto; /* Pull it up into the Hero section */
+  padding: 20px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* Floating effect */
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 10;
+}
+
+.search-input {
+  flex: 2;
+  padding: 15px;
+  border: 2px solid #eee;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #38ef7d;
+}
+
+.filter-select {
+  flex: 1;
+  padding: 15px;
+  border: 2px solid #eee;
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: white;
+}
+
+/* =========================================
+   5. INTERACTIVE CARDS
+   ========================================= */
+.stations-container {
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}
+
+.station-card {
+  background: white;
+  border-radius: 20px;
+  width: 320px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  transition: all 0.4s ease; /* Smooth animation */
+  position: relative;
+  border: 1px solid transparent;
+}
+
+/* THE HOVER EFFECT: The card lifts up and glows */
+.station-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(56, 239, 125, 0.3);
+  border-color: #38ef7d;
+}
+
+.card-header-bg {
+  background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+  padding: 20px;
+  color: white;
+}
+
+.card-header-bg h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.icon {
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+/* PILL BADGES for Type and Price */
+.badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.badge-type { background-color: #e3f2fd; color: #1976d2; }
+.badge-power { background-color: #e8f5e9; color: #388e3c; }
+.badge-price { background-color: #fff3e0; color: #f57c00; }
+
+/* BUTTONS */
+.btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn:active { transform: scale(0.95); }
+.btn-delete { background-color: #ffeff0; color: #ff4757; }
+.btn-delete:hover { background-color: #ff4757; color: white; }
+.btn-edit { background-color: #fff8e1; color: #ffa502; }
+.btn-edit:hover { background-color: #ffa502; color: white; }
+.btn-toggle { background: #f1f2f6; color: #333; }
+.btn-toggle.active { background: #38ef7d; color: white; box-shadow: 0 4px 10px rgba(56, 239, 125, 0.4); }
+
+/* =========================================
+   6. RESPONSIVE MOBILE
+   ========================================= */
+@media (max-width: 600px) {
+  nav { flex-direction: column; text-align: center; gap: 10px; }
+  .search-bar-container { margin: 10px; flex-direction: column; }
+  .station-card { width: 100%; }
+}
