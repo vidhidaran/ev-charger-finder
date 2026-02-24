@@ -17,6 +17,9 @@ function EditStation() {
     type: "CCS2",
     power: "",
     price: "",
+    upiId: "",
+    totalSlots: "10",
+    availableSlots: "10"
   });
 
   useEffect(() => {
@@ -25,7 +28,7 @@ function EditStation() {
         // ✅ FIX: Use API_URL here
         const response = await axios.get(`${API_URL}/api/stations`);
         const station = response.data.find((s) => s._id === id);
-        
+
         if (station) {
           // Map backend data to form state (handling name mismatch if any)
           setFormData({
@@ -35,7 +38,10 @@ function EditStation() {
             longitude: station.longitude,
             type: station.connectorTypes ? station.connectorTypes[0] : "CCS2",
             power: station.powerKW,      // Backend uses powerKW
-            price: station.pricePerKWh   // Backend uses pricePerKWh
+            price: station.pricePerKWh,  // Backend uses pricePerKWh
+            upiId: station.upiId || "",
+            totalSlots: station.totalSlots || "10",
+            availableSlots: station.availableSlots || "10"
           });
         }
       } catch (error) {
@@ -54,13 +60,16 @@ function EditStation() {
     try {
       // Convert form state back to backend format
       const updateData = {
-          name: formData.name,
-          address: formData.address,
-          latitude: formData.latitude,
-          longitude: formData.longitude,
-          connectorTypes: [formData.type],
-          powerKW: formData.power,
-          pricePerKWh: formData.price
+        name: formData.name,
+        address: formData.address,
+        latitude: formData.latitude,
+        longitude: formData.longitude,
+        connectorTypes: [formData.type],
+        powerKW: formData.power,
+        pricePerKWh: formData.price,
+        upiId: formData.upiId,
+        totalSlots: Number(formData.totalSlots),
+        availableSlots: Number(formData.availableSlots)
       };
 
       // ✅ FIX: Use API_URL here
@@ -77,11 +86,15 @@ function EditStation() {
     <div style={{ textAlign: "center", marginTop: "30px" }}>
       <h2>✏️ Edit Station</h2>
       <form className="form-container" onSubmit={handleUpdate}>
-        <input type="text" name="name" placeholder="Station Name" value={formData.name} onChange={handleChange} required className="form-input"/>
-        <input type="text" name="address" placeholder="Address" value={formData.address} onChange={handleChange} required className="form-input"/>
+        <input type="text" name="name" placeholder="Station Name" value={formData.name} onChange={handleChange} required className="form-input" />
+        <input type="text" name="address" placeholder="Address" value={formData.address} onChange={handleChange} required className="form-input" />
         <div className="form-input-group">
-          <input type="number" name="latitude" placeholder="Latitude" value={formData.latitude} onChange={handleChange} required className="form-input"/>
-          <input type="number" name="longitude" placeholder="Longitude" value={formData.longitude} onChange={handleChange} required className="form-input"/>
+          <input type="number" name="latitude" placeholder="Latitude" value={formData.latitude} onChange={handleChange} required className="form-input" />
+          <input type="number" name="longitude" placeholder="Longitude" value={formData.longitude} onChange={handleChange} required className="form-input" />
+        </div>
+        <div className="form-input-group">
+          <input type="number" name="totalSlots" placeholder="Total Slots" value={formData.totalSlots} onChange={handleChange} required className="form-input" />
+          <input type="number" name="availableSlots" placeholder="Available Slots" value={formData.availableSlots} onChange={handleChange} required className="form-input" />
         </div>
         <select name="type" value={formData.type} onChange={handleChange} className="form-select">
           <option value="CCS2">CCS2</option>
@@ -89,8 +102,9 @@ function EditStation() {
           <option value="Type 2">Type 2</option>
           <option value="DC Fast">DC Fast</option>
         </select>
-        <input type="number" name="power" placeholder="Power (kW)" value={formData.power} onChange={handleChange} required className="form-input"/>
-        <input type="number" name="price" placeholder="Price per kWh (₹)" value={formData.price} onChange={handleChange} required className="form-input"/>
+        <input type="number" name="power" placeholder="Power (kW)" value={formData.power} onChange={handleChange} required className="form-input" />
+        <input type="number" name="price" placeholder="Price per kWh (₹)" value={formData.price} onChange={handleChange} required className="form-input" />
+        <input type="text" name="upiId" placeholder="Station UPI ID" value={formData.upiId} onChange={handleChange} required className="form-input" />
         <button type="submit" className="form-button" style={{ backgroundColor: "#ffc107", color: "black" }}>
           Save Changes
         </button>

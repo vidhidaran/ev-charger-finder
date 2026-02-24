@@ -1,30 +1,61 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
-  const navStyle = {
-    backgroundColor: "#333",
-    color: "white",
-    padding: "15px",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center"
+  const [isAdmin, setIsAdmin] = useState(localStorage.getItem('isAdmin') === 'true');
+  const [showLogin, setShowLogin] = useState(false);
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleAdminToggle = () => {
+    if (isAdmin) {
+      localStorage.removeItem('isAdmin');
+      setIsAdmin(false);
+      navigate('/');
+      window.location.reload();
+    } else {
+      setShowLogin(!showLogin);
+    }
   };
 
-  const linkStyle = {
-    color: "white",
-    textDecoration: "none",
-    marginLeft: "20px",
-    fontSize: "18px"
-  };
+  const submitLogin = (e) => {
+    e.preventDefault();
+    if (password === 'admin') {
+      localStorage.setItem('isAdmin', 'true');
+      setIsAdmin(true);
+      setShowLogin(false);
+      setPassword("");
+      window.location.reload();
+    } else {
+      alert("Incorrect Password!");
+    }
+  }
 
   return (
-    <nav style={navStyle}>
-      <h1 style={{ margin: 0 }}>⚡ EV Finder</h1>
-      <div>
-        {/* These Links allow us to switch pages without reloading */}
-        <Link to="/" style={linkStyle}>Home</Link>
-        <Link to="/add" style={linkStyle}>Add Station</Link>
+    <nav>
+      <h1>⚡ EV Finder</h1>
+
+      <div className="nav-links">
+        <Link to="/">Home</Link>
+        {isAdmin && <Link to="/dashboard">Dashboard</Link>}
+        {isAdmin && <Link to="/add">Add Station</Link>}
+
+        {showLogin && !isAdmin && (
+          <form className="login-form" onSubmit={submitLogin}>
+            <input
+              type="password"
+              placeholder="Password (admin)"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoFocus
+            />
+            <button type="submit">Login</button>
+          </form>
+        )}
+
+        <button onClick={handleAdminToggle}>
+          {isAdmin ? 'Logout Admin' : (showLogin ? 'Cancel' : 'Admin Login')}
+        </button>
       </div>
     </nav>
   );

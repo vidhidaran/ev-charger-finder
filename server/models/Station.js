@@ -9,6 +9,24 @@ const stationSchema = new mongoose.Schema({
   powerKW: Number,
   availability: Boolean,
   pricePerKWh: Number,
+  upiId: { type: String, default: "" },
+  totalSlots: { type: Number, default: 10 },
+  availableSlots: { type: Number, default: 10 },
+  bookedTimeSlots: [
+    {
+      date: String,
+      time: String,
+      count: { type: Number, default: 0 },
+      bookings: [
+        {
+          customerName: String,
+          customerPhone: String,
+          amountPaid: { type: Number, default: 50 },
+          bookedAt: { type: Date, default: Date.now }
+        }
+      ]
+    }
+  ],
   hours: {
     open: String,
     close: String

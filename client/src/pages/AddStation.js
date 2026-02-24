@@ -16,6 +16,9 @@ function AddStation() {
     connectorTypeInput: "CCS2",
     powerKW: "",
     pricePerKWh: "",
+    upiId: "",
+    totalSlots: "10",
+    availableSlots: "10"
   });
 
   const handleChange = (e) => {
@@ -24,22 +27,25 @@ function AddStation() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const dataToSend = {
-        name: formData.name,
-        address: formData.address,
-        latitude: formData.latitude,
-        longitude: formData.longitude,
-        connectorTypes: [formData.connectorTypeInput],
-        powerKW: formData.powerKW,
-        pricePerKWh: formData.pricePerKWh
+      name: formData.name,
+      address: formData.address,
+      latitude: formData.latitude,
+      longitude: formData.longitude,
+      connectorTypes: [formData.connectorTypeInput],
+      powerKW: formData.powerKW,
+      pricePerKWh: formData.pricePerKWh,
+      upiId: formData.upiId,
+      totalSlots: Number(formData.totalSlots),
+      availableSlots: Number(formData.availableSlots)
     };
 
     try {
       // ✅ FIX: Use API_URL here
       await axios.post(`${API_URL}/api/stations/add`, dataToSend);
       alert("Station Added Successfully! ✅");
-      navigate("/"); 
+      navigate("/");
     } catch (error) {
       console.error("Error adding station:", error);
       alert("Failed to add station ❌");
@@ -52,10 +58,14 @@ function AddStation() {
       <form className="form-container" onSubmit={handleSubmit}>
         <input type="text" name="name" placeholder="Station Name" value={formData.name} onChange={handleChange} required className="form-input" />
         <input type="text" name="address" placeholder="Address" value={formData.address} onChange={handleChange} required className="form-input" />
-        
+
         <div className="form-input-group">
           <input type="number" name="latitude" placeholder="Latitude" value={formData.latitude} onChange={handleChange} required className="form-input" />
           <input type="number" name="longitude" placeholder="Longitude" value={formData.longitude} onChange={handleChange} required className="form-input" />
+        </div>
+        <div className="form-input-group">
+          <input type="number" name="totalSlots" placeholder="Total Slots" value={formData.totalSlots} onChange={handleChange} required className="form-input" />
+          <input type="number" name="availableSlots" placeholder="Available Slots" value={formData.availableSlots} onChange={handleChange} required className="form-input" />
         </div>
 
         <select name="connectorTypeInput" value={formData.connectorTypeInput} onChange={handleChange} className="form-select">
@@ -67,7 +77,8 @@ function AddStation() {
 
         <input type="number" name="powerKW" placeholder="Power (kW)" value={formData.powerKW} onChange={handleChange} required className="form-input" />
         <input type="number" name="pricePerKWh" placeholder="Price per kWh (₹)" value={formData.pricePerKWh} onChange={handleChange} required className="form-input" />
-        
+        <input type="text" name="upiId" placeholder="Station UPI ID (For Payments)" value={formData.upiId} onChange={handleChange} required className="form-input" />
+
         <button type="submit" className="form-button">Submit Station</button>
       </form>
     </div>
